@@ -1,0 +1,137 @@
+drop database cloth_store;
+
+create database cloth_store;
+use cloth_store;
+
+create table product (
+Product_Id varchar(10) primary key,
+Product_Type varchar(15) not null,
+Product_Name varchar(25) not null,
+Product_Price numeric not null);
+
+create table product_type (
+ProdType_Id varchar(10) primary key,
+ProdType_Name varchar(25) not null);
+
+create table statement (
+Transfer_from_Bank_Account varchar(15) primary key,
+Transaction_date date not null,
+Beneficiary_Bank char(25) not null,
+Into_Bank_Account  varchar(15) not null,
+Total_Price numeric(10) not null);
+
+create table login (
+Email varchar(30) primary key,
+Password varchar(30) not null);
+
+create table employee (
+Emp_Id varchar(10) primary key,
+Emp_Name varchar(25) not null,
+Emp_Phone varchar(15) not null,
+Emp_Password varchar(30) not null,
+Email varchar(30) not null,
+Foreign Key (Email) References Login (Email));
+
+create table purchase_order (
+PO_Id varchar(10) primary key,
+Cus_Id varchar(10) not null,
+Date_PO date not null,
+Product_Id varchar(10) not null,
+Product_Name varchar(25) not null,
+Total_Price numeric not null,
+Emp_Id varchar(10) not null,
+Foreign Key (Emp_Id) References Employee (Emp_Id));
+
+create table Instruct (
+ProdType_Id varchar(10),
+Poduct_Id varchar(10),
+Constraint PK_Instruct Primary Key (ProdType_Id,Poduct_Id));
+
+create table Total_Product (
+Poduct_Id varchar(10),
+PO_Id varchar(10),
+Constraint PK_Total_Product Primary Key (Poduct_Id,PO_Id));
+
+create  table Customer (
+Cus_Id varchar(10) primary key,
+name varchar(25) not null,
+Cus_Phone varchar(15) not null,
+Cus_Address varchar(50) not null,
+Cus_Password varchar(30) not null,
+Transfer_from_Bank_Account varchar(15),
+Emp_Id varchar(10),
+Email varchar(30),
+Foreign Key (Transfer_from_Bank_Account) References Statement (Transfer_from_Bank_Account),
+Foreign Key (Emp_Id) References Employee (Emp_Id),
+Foreign Key (Email) References Login (Email));
+
+create table Receipt (
+Receipt_Id varchar(300) primary key,
+Date_Receipt date not null,
+Product_Id varchar(10) not null,
+Total_Price numeric not null,
+Cus_Id varchar(10),
+Emp_Id varchar(10),
+Foreign Key (Cus_Id) References Customer (Cus_Id),
+Foreign Key (Emp_Id) References Employee (Emp_Id));
+
+create table Choose (
+Cus_Id varchar(10),
+ProdType_Id varchar(10),
+Constraint PK_Choose Primary Key (Cus_Id,ProdType_Id));
+
+create table Examine (
+Transfer_from_Bank_Account varchar(15),
+Emp_Id varchar(10),
+Constraint PK_Examine Primary Key (Transfer_from_Bank_Account,Emp_Id));
+
+/* Product rows */
+INSERT INTO PRODUCT VALUES ('CS-010101','Top','Red T-Shirt',200);
+INSERT INTO PRODUCT VALUES ('CS-010204','Bottom','Jeans',590);
+INSERT INTO PRODUCT VALUES ('CS-010502','Shoes','Black-Sneaker',1900);
+INSERT INTO PRODUCT VALUES ('CS-010606','Accessories','Ring',300);
+
+/* ProductType rows */
+INSERT INTO Product_Type VALUES ('CS-010100','Top');
+INSERT INTO Product_Type VALUES ('CS-010200','Bottom');
+INSERT INTO Product_Type VALUES ('CS-010300','Kids');
+INSERT INTO Product_Type VALUES ('CS-010400','Suit/Dress');
+INSERT INTO Product_Type VALUES ('CS-010500','Shoes');
+INSERT INTO Product_Type VALUES ('CS-010600','Accessories');
+
+/* Statement rows */
+INSERT INTO STATEMENT VALUES ('5074575055','2021-04-20','Kasikorn Bank','9932223527',300);
+INSERT INTO STATEMENT VALUES ('1234567890','2021-04-20','Kasikorn Bank','9932223527',200);
+INSERT INTO STATEMENT VALUES ('0897654321','2021-04-20','Kasikorn Bank','9932223527',1900);
+INSERT INTO STATEMENT VALUES ('456987123','2021-04-20','Kasikorn Bank','9932223527',500);
+
+/* Login rows */
+INSERT INTO LOGIN VALUES ('Ticha_t@gmail.com','080841');
+INSERT INTO LOGIN VALUES ('Thanadol@gmail.com','190143');
+INSERT INTO LOGIN VALUES ('Wanchana@gmail.com','300739');
+INSERT INTO LOGIN VALUES ('Thanyaporn@gmail.com','120638');
+INSERT INTO LOGIN VALUES ('Panlekha@gmail.com','080243');
+INSERT INTO LOGIN VALUES ('Nattha_16@gmail.com','160940');
+INSERT INTO LOGIN VALUES ('Kamonthip@gmail.com','240941');
+INSERT INTO LOGIN VALUES ('Wanlapha@gmail.com','190638');
+
+
+/* Employee rows */
+INSERT INTO EMPLOYEE VALUES ('EMP01','Panlekha','0923378766','080543','Panlekha@gmail.com');
+INSERT INTO EMPLOYEE VALUES ('EMP02','Nattha','0633279295','160943','Nattha_16@gmail.com');
+INSERT INTO EMPLOYEE VALUES ('EMP03','Kamonthip','0983696029','240941','Kamonthip@gmail.com');
+INSERT INTO EMPLOYEE VALUES ('EMP04','Nattha','0633279295','190638','Wanlapha@gmail.com');
+
+
+/* Purchase Order rows */
+INSERT INTO Purchase_Order VALUES ('000A24','CUS03','2021-4-20','CS-010606','Ring',300,'EMP03');
+
+/* Customer rows */
+INSERT INTO CUSTOMER VALUES ('CUS01','Thanadol','0863651977','64/1,LopBuri 15130','190143','5074575055','EMP01','Thanadol@gmail.com');
+INSERT INTO CUSTOMER VALUES ('CUS02','Wanchana','0999745239','28/7,BKK 10800','300739','1234567890','EMP01','Wanchana@gmail.com');
+INSERT INTO CUSTOMER VALUES ('CUS03','Ticha','0649609505','5/89,RBP 70000','080841','0897654321','EMP03','Ticha_t@gmail.com');
+INSERT INTO CUSTOMER VALUES ('CUS04','Thanyaporn','0870782131','340/36,SPK 10280','120638','456987123','EMP04','Thanyaporn@gmail.com');
+
+/* Receipt rows */
+INSERT INTO RECEIPT VALUES ('0650','2021-4-20','CS-010606',300,'CUS03','EMP03');
+
